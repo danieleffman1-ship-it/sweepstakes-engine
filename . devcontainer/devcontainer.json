@@ -1,0 +1,52 @@
+{
+  "name": "Sweepstakes Engine Mobile Cloud Environment",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+
+  // Auto-install Node.js, PostgreSQL, and Redis features
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/postgres:1": {
+      "version": "16"
+    },
+    "ghcr.io/devcontainers/features/redis:1": {
+      "version": "7"
+    }
+  },
+
+  // Auto-forward database and API ports for mobile testing
+  "forwardPorts": [5432, 6379, 3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Fastify Game API",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL Database"
+    },
+    "6379": {
+      "label": "Redis Cache"
+    }
+  },
+
+  // Environment variables pre-configured for local container database access
+  "containerEnv": {
+    "DATABASE_URL": "postgres://postgres:postgres@localhost:5432/sweepstakes_engine",
+    "REDIS_URL": "redis://localhost:6379",
+    "PORT": "3000"
+  },
+
+  // Automatic boot script to start services and install npm dependencies
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ckvr.angular-material-icon-theme"
+      ]
+    }
+  }
+}
